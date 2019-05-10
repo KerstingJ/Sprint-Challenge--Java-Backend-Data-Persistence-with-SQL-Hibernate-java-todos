@@ -13,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -81,7 +80,7 @@ public class controller
     }
 
     //  DELETE /users/userid/{userid} - Deletes a user based off of their userid and deletes all their associated todos. Can only be done by an admin.
-    @DeleteMapping(value="/users/userid/{userid}", consumes="application/json")
+    @DeleteMapping(value="/users/userid/{userid}")
     public ResponseEntity<?> deleteUserById(@PathVariable Long userid)
     {
         userService.delete(userid);
