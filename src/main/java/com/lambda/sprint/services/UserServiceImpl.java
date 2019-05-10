@@ -3,6 +3,7 @@ package com.lambda.sprint.services;
 import com.lambda.sprint.daos.RoleDao;
 import com.lambda.sprint.daos.UserDao;
 import com.lambda.sprint.exceptions.ResourceNotFoundException;
+import com.lambda.sprint.models.Role;
 import com.lambda.sprint.models.User;
 import com.lambda.sprint.models.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,12 @@ public class UserServiceImpl implements UserDetailsService, UserService
         {
             newRoles.add(new UserRoles(newUser, ur.getRole()));
         }
+
+        // if nothing else set as user
+        if (newRoles.size() < 1) {
+            newRoles.add(new UserRoles(newUser, rolerepos.findByName("user")));
+        }
+
         newUser.setUserRoles(newRoles);
 
         return userrepos.save(newUser);

@@ -18,4 +18,6 @@ public interface RoleDao extends CrudRepository<Role, Long>
     @Query(value = "INSERT INTO UserRoles(userid, roleid) values (:userid, :roleid)", nativeQuery = true)
     void insertUserRoles(long userid, long roleid);
 
+    Role findByName(String name);
+
 }

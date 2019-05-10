@@ -9,11 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 public class controller
@@ -27,7 +29,7 @@ public class controller
     public ResponseEntity<?> doTest()
     {
         List<User> users = userService.findAll();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return new ResponseEntity<>(users, OK);
     }
 
     //  GET /users/mine - return the user and todo based off of the authenticated user. You can only look up your own.
@@ -49,10 +51,16 @@ public class controller
             throw new ResourceNotFoundException("Could not find valid user");
         }
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(user, OK);
     }
 
     //  POST /users - adds a user. Can only be done by an admin.
+    @PostMapping(value="/users", consumes="application/json", produces="application/json")
+    public ResponseEntity<?> addUser(@Valid @RequestBody User user) {
+        User rtn = userService.save(user);
+        return new ResponseEntity<>(rtn, OK);
+    }
+
     //  POST /users/todo/{userid} - adds a todo to the assigned user. Can be done by any user.
     //  PUT /todos/todoid/{todoid} - updates a todo based on todoid. Can be done by any user.
     //  DELETE /users/userid/{userid} - Deletes a user based off of their userid and deletes all their associated todos. Can only be done by an admin.
