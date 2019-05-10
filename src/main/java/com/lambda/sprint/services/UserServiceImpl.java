@@ -1,7 +1,8 @@
 package com.lambda.sprint.services;
 
-import com.lambda.sprint.daos.RoleRepository;
-import com.lambda.sprint.daos.UserRepository;
+import com.lambda.sprint.daos.RoleDao;
+import com.lambda.sprint.daos.UserDao;
+import com.lambda.sprint.exceptions.ResourceNotFoundException;
 import com.lambda.sprint.models.User;
 import com.lambda.sprint.models.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,10 @@ public class UserServiceImpl implements UserDetailsService, UserService
 {
 
     @Autowired
-    private UserRepository userrepos;
+    private UserDao userrepos;
 
     @Autowired
-    private RoleRepository rolerepos;
+    private RoleDao rolerepos;
 
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
@@ -42,6 +43,13 @@ public class UserServiceImpl implements UserDetailsService, UserService
     {
         return userrepos.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Long.toString(id)));
+    }
+
+    public User findUserByUsername(String username)
+    {
+        User user = userrepos.findByUsername(username);
+        if (user == null) throw new ResourceNotFoundException("Could not find a user with username: " + username);
+        return user;
     }
 
     public List<User> findAll()
